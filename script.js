@@ -17,6 +17,38 @@ const phrases = {
     ar: "كل شيء منطقي حتى لا يكون كذلك."
 };
 
+// 언어별 manifesto 정의
+const manifestos = {
+    en: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    ko: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    ja: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    fr: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    es: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    zh: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    },
+    ar: {
+        top: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark.",
+        bottom: "We don't reject the network. We refuse its terms.This is not about perfect escape. There is no such thing. This is about tactical disappearance. Not through complexity but through inversion. We cache our words in the gap and going off the grid will reveal itself. Disconnect . the become invisible and read in the dark."
+    }
+};
+
 // 언어 코드 매핑 (브라우저가 반환하는 형식 처리)
 function getLanguageCode(lang) {
     const code = lang.toLowerCase().split('-')[0];
@@ -27,20 +59,14 @@ function getLanguageCode(lang) {
 // 현재 디바이스 언어 감지
 const currentLang = getLanguageCode(navigator.language || navigator.userLanguage);
 
-console.log('=== Language Detection ===');
-console.log('Raw navigator.language:', navigator.language);
-console.log('Detected language code:', currentLang);
-
 // LocalStorage에서 데이터 가져오기 (BEFORE 처리)
 const hasVisitedBefore = localStorage.getItem('hasVisited');
 const lastNonEnglishLanguageBefore = localStorage.getItem('lastNonEnglishLanguage');
 
-console.log('=== Storage Data BEFORE ===');
-console.log('Has visited before:', hasVisitedBefore);
-console.log('Last non-English language before:', lastNonEnglishLanguageBefore);
-
 // DOM 요소
 const phraseDiv = document.querySelector('.phrase');
+const manifestoTopDiv = document.querySelector('.manifesto-top');
+const manifestoBottomDiv = document.querySelector('.manifesto-bottom');
 const banner = document.querySelector('.banner p');
 
 // 배너 업데이트
@@ -59,112 +85,52 @@ banner.textContent = `Your language setting is ${languageNames[currentLang]}`;
 // 표시할 문장 결정
 let displayPhrase = '';
 
-console.log('=== Phrase Selection ===');
-
 if (currentLang === 'en') {
     // 영어인 경우
     if (!hasVisitedBefore) {
         // 첫 방문
         displayPhrase = phrases.en.first;
         localStorage.setItem('hasVisited', 'true');
-        console.log('First visit in English - saving hasVisited');
     } else if (lastNonEnglishLanguageBefore) {
         // 다른 언어를 거쳐서 돌아온 경우
         const key = `from${lastNonEnglishLanguageBefore.charAt(0).toUpperCase() + lastNonEnglishLanguageBefore.slice(1)}`;
         displayPhrase = phrases.en[key];
-        console.log('Returning to English from:', lastNonEnglishLanguageBefore);
-        console.log('Using key:', key);
     } else {
         // 영어만 계속 사용한 경우
         displayPhrase = phrases.en.first;
-        console.log('English only, no other languages visited');
     }
 } else {
     // 비영어 언어인 경우
     displayPhrase = phrases[currentLang];
     localStorage.setItem('hasVisited', 'true');
     localStorage.setItem('lastNonEnglishLanguage', currentLang);
-    console.log('Non-English language detected:', currentLang);
-    console.log('Saving to localStorage...');
 }
-
-console.log('Selected phrase:', displayPhrase);
-
-// LocalStorage에서 데이터 가져오기 (AFTER 처리)
-const hasVisitedAfter = localStorage.getItem('hasVisited');
-const lastNonEnglishLanguageAfter = localStorage.getItem('lastNonEnglishLanguage');
-
-console.log('=== Storage Data AFTER ===');
-console.log('Has visited after:', hasVisitedAfter);
-console.log('Last non-English language after:', lastNonEnglishLanguageAfter);
-console.log('========================');
 
 // 문장 표시
 phraseDiv.textContent = displayPhrase;
 
-// 디버그 정보를 화면에 표시
-const debugDiv = document.createElement('div');
-debugDiv.style.cssText = `
-    position: fixed;
-    top: 30px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #0f0;
-    padding: 10px;
-    font-family: monospace;
-    font-size: 12px;
-    max-width: 90%;
-    z-index: 1000;
-    line-height: 1.5;
-`;
-
-// localStorage 실시간 확인 함수
-function getStorageInfo() {
-    return `
-        hasVisited: ${localStorage.getItem('hasVisited')}<br>
-        lastNonEnglishLanguage: ${localStorage.getItem('lastNonEnglishLanguage')}
-    `;
-}
-
-debugDiv.innerHTML = `
-    <strong>DEBUG INFO:</strong><br>
-    Raw lang: ${navigator.language}<br>
-    Detected: ${currentLang}<br>
-    <br>
-    <strong>BEFORE:</strong><br>
-    Has visited: ${hasVisitedBefore}<br>
-    Last non-EN: ${lastNonEnglishLanguageBefore}<br>
-    <br>
-    <strong>AFTER:</strong><br>
-    Has visited: ${hasVisitedAfter}<br>
-    Last non-EN: ${lastNonEnglishLanguageAfter}<br>
-    <br>
-    Phrase: ${displayPhrase.substring(0, 30)}...<br>
-    <br>
-    <strong>LOCALSTORAGE NOW:</strong><br>
-    ${getStorageInfo()}
-`;
-
-document.body.appendChild(debugDiv);
+// manifesto 표시
+manifestoTopDiv.textContent = manifestos[currentLang].top;
+manifestoBottomDiv.textContent = manifestos[currentLang].bottom;
 
 // Erase Memory 버튼 생성
 const eraseButton = document.createElement('button');
 eraseButton.textContent = 'Erase Memory';
 eraseButton.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background-color: #000;
-    color: #fff;
-    border: 1px solid #fff;
+    bottom: 0;
+    right: 0;
+    padding: 5px 5px;
+    background-color: transparent;
+    color: rgb(255 255 255 / 52%);
+    border: none;
     cursor: pointer;
-    font-family: 'myFont', sans-serif;
-    font-size: 14px;
+    font-family: lightFont, sans-serif;
+    text-decoration: underline;
+    font-size: 12px;
 `;
 
 eraseButton.addEventListener('click', () => {
-    console.log('Memory erased - clearing localStorage');
     localStorage.clear();
     location.reload();
 });
