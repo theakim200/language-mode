@@ -31,13 +31,13 @@ console.log('=== Language Detection ===');
 console.log('Raw navigator.language:', navigator.language);
 console.log('Detected language code:', currentLang);
 
-// LocalStorage에서 데이터 가져오기
-const hasVisited = localStorage.getItem('hasVisited');
-const lastNonEnglishLanguage = localStorage.getItem('lastNonEnglishLanguage');
+// LocalStorage에서 데이터 가져오기 (BEFORE 처리)
+const hasVisitedBefore = localStorage.getItem('hasVisited');
+const lastNonEnglishLanguageBefore = localStorage.getItem('lastNonEnglishLanguage');
 
-console.log('=== Storage Data ===');
-console.log('Has visited before:', hasVisited);
-console.log('Last non-English language:', lastNonEnglishLanguage);
+console.log('=== Storage Data BEFORE ===');
+console.log('Has visited before:', hasVisitedBefore);
+console.log('Last non-English language before:', lastNonEnglishLanguageBefore);
 
 // DOM 요소
 const phraseDiv = document.querySelector('.phrase');
@@ -63,15 +63,17 @@ console.log('=== Phrase Selection ===');
 
 if (currentLang === 'en') {
     // 영어인 경우
-    if (!hasVisited) {
+    if (!hasVisitedBefore) {
         // 첫 방문
         displayPhrase = phrases.en.first;
         localStorage.setItem('hasVisited', 'true');
-        console.log('First visit in English');
-    } else if (lastNonEnglishLanguage) {
+        console.log('First visit in English - saving hasVisited');
+    } else if (lastNonEnglishLanguageBefore) {
         // 다른 언어를 거쳐서 돌아온 경우
-        displayPhrase = phrases.en[`from${lastNonEnglishLanguage.charAt(0).toUpperCase() + lastNonEnglishLanguage.slice(1)}`];
-        console.log('Returning to English from:', lastNonEnglishLanguage);
+        const key = `from${lastNonEnglishLanguageBefore.charAt(0).toUpperCase() + lastNonEnglishLanguageBefore.slice(1)}`;
+        displayPhrase = phrases.en[key];
+        console.log('Returning to English from:', lastNonEnglishLanguageBefore);
+        console.log('Using key:', key);
     } else {
         // 영어만 계속 사용한 경우
         displayPhrase = phrases.en.first;
@@ -83,9 +85,18 @@ if (currentLang === 'en') {
     localStorage.setItem('hasVisited', 'true');
     localStorage.setItem('lastNonEnglishLanguage', currentLang);
     console.log('Non-English language detected:', currentLang);
+    console.log('Saving to localStorage...');
 }
 
 console.log('Selected phrase:', displayPhrase);
+
+// LocalStorage에서 데이터 가져오기 (AFTER 처리)
+const hasVisitedAfter = localStorage.getItem('hasVisited');
+const lastNonEnglishLanguageAfter = localStorage.getItem('lastNonEnglishLanguage');
+
+console.log('=== Storage Data AFTER ===');
+console.log('Has visited after:', hasVisitedAfter);
+console.log('Last non-English language after:', lastNonEnglishLanguageAfter);
 console.log('========================');
 
 // 문장 표시
@@ -119,8 +130,15 @@ debugDiv.innerHTML = `
     <strong>DEBUG INFO:</strong><br>
     Raw lang: ${navigator.language}<br>
     Detected: ${currentLang}<br>
-    Has visited: ${hasVisited}<br>
-    Last non-EN: ${lastNonEnglishLanguage}<br>
+    <br>
+    <strong>BEFORE:</strong><br>
+    Has visited: ${hasVisitedBefore}<br>
+    Last non-EN: ${lastNonEnglishLanguageBefore}<br>
+    <br>
+    <strong>AFTER:</strong><br>
+    Has visited: ${hasVisitedAfter}<br>
+    Last non-EN: ${lastNonEnglishLanguageAfter}<br>
+    <br>
     Phrase: ${displayPhrase.substring(0, 30)}...<br>
     <br>
     <strong>LOCALSTORAGE NOW:</strong><br>
