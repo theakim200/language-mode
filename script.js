@@ -56,6 +56,34 @@ function getLanguageCode(lang) {
     return supportedLangs.includes(code) ? code : 'en';
 }
 
+// 컬러 세트 정의
+const colorSets = [
+    {
+        background: '#FDA4FB',
+        manifesto: '#461006',
+        phrase: '#EBE8E7'
+    },
+    {
+        background: '#717C1C',
+        manifesto: '#252904',
+        phrase: '#A0FF08'
+    },
+    {
+        background: '#90A1BF',
+        manifesto: '#384D72',
+        phrase: '#FFFB00'
+    }
+];
+
+// 랜덤 컬러 세트 선택
+const randomColorSet = colorSets[Math.floor(Math.random() * colorSets.length)];
+
+// 컬러 적용
+document.body.style.backgroundColor = randomColorSet.background;
+document.querySelector('.phrase').style.color = randomColorSet.phrase;
+document.querySelector('.manifesto-top').style.color = randomColorSet.manifesto;
+document.querySelector('.manifesto-bottom').style.color = randomColorSet.manifesto;
+
 // 현재 디바이스 언어 감지
 const currentLang = getLanguageCode(navigator.language || navigator.userLanguage);
 
@@ -112,6 +140,23 @@ phraseDiv.textContent = displayPhrase;
 // manifesto 표시
 manifestoTopDiv.textContent = manifestos[currentLang].top;
 manifestoBottomDiv.textContent = manifestos[currentLang].bottom;
+
+// manifesto 스타일 적용
+if (currentLang === 'en') {
+    if (!hasVisitedBefore || !lastNonEnglishLanguageBefore) {
+        // 최초 영어
+        manifestoTopDiv.style.cssText = 'opacity: 0.31; filter: blur(6.300000190734863px);';
+        manifestoBottomDiv.style.cssText = 'opacity: 0.31; filter: blur(6.300000190734863px);';
+    } else {
+        // 변형된 영어 (다른 언어 거쳐서 돌아옴)
+        manifestoTopDiv.style.cssText = 'opacity: 1; filter: none;';
+        manifestoBottomDiv.style.cssText = 'opacity: 1; filter: none;';
+    }
+} else {
+    // 영어 외 언어
+    manifestoTopDiv.style.cssText = 'opacity: 0.51; filter: blur(2px);';
+    manifestoBottomDiv.style.cssText = 'opacity: 0.51; filter: blur(2px);';
+}
 
 // Erase Memory 버튼 생성
 const eraseButton = document.createElement('button');

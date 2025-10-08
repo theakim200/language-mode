@@ -20,11 +20,6 @@ html, body {
     overflow: hidden;
     font-family: 'lightFont', sans-serif;
 }
-@media (min-width: 400px) {
-  html {
-    font-size: 18px;
-  }
-}
 body {
     background-color: #717C1C;
     height: 100vh;
@@ -95,4 +90,13 @@ body {
     line-height: 96%;
     letter-spacing: -1px;
     max-width: 350px;
+}
+
+@media (min-width: 400px) {
+  html {
+    font-size: 24px;
+  }
+  .manifesto {
+    max-width: 500px;
+}
 }
