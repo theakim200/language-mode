@@ -91,6 +91,44 @@ console.log('========================');
 // 문장 표시
 phraseDiv.textContent = displayPhrase;
 
+// 디버그 정보를 화면에 표시
+const debugDiv = document.createElement('div');
+debugDiv.style.cssText = `
+    position: fixed;
+    top: 30px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #0f0;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 12px;
+    max-width: 90%;
+    z-index: 1000;
+    line-height: 1.5;
+`;
+
+// localStorage 실시간 확인 함수
+function getStorageInfo() {
+    return `
+        hasVisited: ${localStorage.getItem('hasVisited')}<br>
+        lastNonEnglishLanguage: ${localStorage.getItem('lastNonEnglishLanguage')}
+    `;
+}
+
+debugDiv.innerHTML = `
+    <strong>DEBUG INFO:</strong><br>
+    Raw lang: ${navigator.language}<br>
+    Detected: ${currentLang}<br>
+    Has visited: ${hasVisited}<br>
+    Last non-EN: ${lastNonEnglishLanguage}<br>
+    Phrase: ${displayPhrase.substring(0, 30)}...<br>
+    <br>
+    <strong>LOCALSTORAGE NOW:</strong><br>
+    ${getStorageInfo()}
+`;
+
+document.body.appendChild(debugDiv);
+
 // Erase Memory 버튼 생성
 const eraseButton = document.createElement('button');
 eraseButton.textContent = 'Erase Memory';
